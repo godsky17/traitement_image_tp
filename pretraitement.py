@@ -258,6 +258,7 @@ def main():
     """
     DOSSIER_ENTREE = "samples"
     DOSSIER_SORTIE = "sorties"
+    DOSSIER_RESULTATS = "resultats"
 
     # Récupérer toutes les images PNG/JPG du dossier
     extensions = (".png", ".jpg", ".jpeg")
@@ -287,9 +288,16 @@ def main():
 
         chemin_figure = generer_capture_avant_apres(resultats, nom, DOSSIER_SORTIE)
         print(f"    ✔ Figure sauvegardée    : {chemin_figure}\n")
-
+        
+        # Sauvegarde de l'image finale dans resultats/
+        os.makedirs("resultats", exist_ok=True)
+        chemin_resultat = os.path.join("resultats", Path(chemin).name)
+        cv2.imwrite(chemin_resultat, resultats["propre"])
+        print(f"    ✔ Résultat sauvegardé   : {os.path.abspath(chemin_resultat)}\n")
+        
     print(f"{'='*55}")
     print(f"  Prétraitement terminé. Résultats dans : {DOSSIER_SORTIE}/")
+    print(f"  Images finales dans : {DOSSIER_RESULTATS}/")
     print(f"{'='*55}")
 
 
