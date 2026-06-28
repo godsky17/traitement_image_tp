@@ -11,7 +11,7 @@ Module de prétraitement d'images pour la reconnaissance de chiffres manuscrits.
     5. Nettoyage morphologique (ouverture) pour éliminer les artefacts résiduels
 
 Auteur  : Ingénieur ML
-Version : 1.0.0
+Version : 1.0.1
 """
 
 import os
@@ -30,6 +30,7 @@ from pathlib import Path
 def charger_image(chemin: str) -> np.ndarray:
     """
     Charge une image depuis le disque en format BGR (OpenCV).
+    Supporte les chemins contenant des caractères spéciaux ou accentués (Unicode).
 
     Args:
         chemin (str): Chemin complet vers le fichier image.
@@ -44,7 +45,12 @@ def charger_image(chemin: str) -> np.ndarray:
     if not os.path.exists(chemin):
         raise FileNotFoundError(f"Image introuvable : {chemin}")
 
-    image = cv2.imread(chemin)
+    # Utilisation de np.fromfile + cv2.imdecode pour supporter les accents
+    try:
+        image = cv2.imdecode(np.fromfile(chemin, dtype=np.uint8), cv2.IMREAD_COLOR)
+    except Exception as e:
+        raise ValueError(f"Erreur lors du décodage de l'image : {chemin}. Détails : {e}")
+
     if image is None:
         raise ValueError(f"Impossible de lire l'image : {chemin}")
 
@@ -70,7 +76,7 @@ def convertir_niveaux_de_gris(image_bgr: np.ndarray) -> np.ndarray:
 
 def reduire_bruit(image_gris: np.ndarray, taille_noyau: int = 5) -> np.ndarray:
     """
-    Applique un filtre Gaussien pour réduire le bruit haute fréquence.
+    Applique un filtre Gaussien pour réduire le bruit haute frequency.
 
     Le flou Gaussien lisse les variations brutales de pixels (bruit de capteur,
     grain de papier, poussières) sans trop dégrader les contours du chiffre.
@@ -114,7 +120,7 @@ def binariser_otsu(image_lissee: np.ndarray) -> tuple[np.ndarray, float]:
     """
     seuil, image_binaire = cv2.threshold(
         image_lissee,
-        0,                          # valeur ignorée avec OTSU
+        0,                              # valeur ignorée avec OTSU
         255,
         cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU
     )
@@ -122,8 +128,8 @@ def binariser_otsu(image_lissee: np.ndarray) -> tuple[np.ndarray, float]:
 
 
 def nettoyer_morphologie(image_binaire: np.ndarray,
-                          taille_noyau: int = 3,
-                          iterations: int = 1) -> np.ndarray:
+                         taille_noyau: int = 3,
+                         iterations: int = 1) -> np.ndarray:
     """
     Applique une ouverture morphologique pour supprimer les petits artefacts.
 
@@ -152,8 +158,8 @@ def nettoyer_morphologie(image_binaire: np.ndarray,
 
 
 def pretraiter_image(chemin: str,
-                      taille_noyau_bruit: int = 5,
-                      taille_noyau_morpho: int = 3) -> dict:
+                     taille_noyau_bruit: int = 5,
+                     taille_noyau_morpho: int = 3) -> dict:
     """
     Pipeline complet de prétraitement d'une image de chiffre manuscrit.
 
@@ -199,8 +205,8 @@ def pretraiter_image(chemin: str,
 # ---------------------------------------------------------------------------
 
 def generer_capture_avant_apres(resultats: dict,
-                                  nom_fichier: str,
-                                  dossier_sortie: str = ".") -> str:
+                                nom_fichier: str,
+                                dossier_sortie: str = ".") -> str:
     """
     Génère et sauvegarde une figure comparative « avant / après » en 5 étapes.
 
@@ -292,8 +298,15 @@ def main():
         # Sauvegarde de l'image finale dans resultats/
         os.makedirs("resultats", exist_ok=True)
         chemin_resultat = os.path.join("resultats", Path(chemin).name)
-        cv2.imwrite(chemin_resultat, resultats["propre"])
-        print(f"    ✔ Résultat sauvegardé   : {os.path.abspath(chemin_resultat)}\n")
+        
+        # CORRECTION UNICODE : Remplacement de cv2.imwrite pour supporter correctement les accents sous Windows
+        extension = Path(chemin_resultat).suffix
+        succes, img_encode = cv2.imencode(extension, resultats["propre"])
+        if succes:
+            img_encode.tofile(chemin_resultat)
+            print(f"    ✔ Résultat sauvegardé   : {os.path.abspath(chemin_resultat)}\n")
+        else:
+            print(f"    ❌ Erreur lors de la sauvegarde binaire de : {chemin_resultat}\n")
         
     print(f"{'='*55}")
     print(f"  Prétraitement terminé. Résultats dans : {DOSSIER_SORTIE}/")
