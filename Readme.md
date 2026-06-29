@@ -1,10 +1,10 @@
-# Projet OCR — Reconnaissance Automatique de Codes Postaux Manuscrits
+# Projet OCR - Reconnaissance automatique de codes postaux manuscrits
 
 > Système complet de traitement d'images et de classification supervisée pour la reconnaissance de chiffres manuscrits isolés ou collés.
 
 ---
 
-## 🚀 Objectif du Projet
+## 🚀 Objectif du projet
 
 Ce projet vise à extraire et reconnaître automatiquement une suite de chiffres manuscrits (ex: un code postal) à partir d'une image brute (photo, scan). Il intègre un pipeline complet de Vision par Ordinateur et de Machine Learning divisé en trois phases majeures :
 
@@ -14,7 +14,7 @@ Ce projet vise à extraire et reconnaître automatiquement une suite de chiffres
 
 ---
 
-## 📊 Pipeline Global d'Exécution
+## 📊 Pipeline global d'exécution
 
 ```
       [Image Brute] (Photo / Scan dans samples/)
@@ -57,7 +57,7 @@ Ce projet vise à extraire et reconnaître automatiquement une suite de chiffres
 
 ---
 
-## 📁 Structure du Projet mis à jour
+## 📁 Structure du projet mis à jour
 
 ```
 TRAITEMENT_IMAGE/
@@ -93,14 +93,14 @@ TRAITEMENT_IMAGE/
 
 ---
 
-## 🛠️ Installation et Configuration
+##  Installation et configuration
 
 ### Prérequis
 
 * Python **3.10+**
 * Gestionnaire de paquets `pip`
 
-### 1. Environnement Virtuel
+### 1. Environnement virtuel
 
 ```bash
 # Création de l'environnement venv
@@ -114,7 +114,7 @@ source venv/bin/activate
 
 ```
 
-### 2. Installation des Dépendances
+### 2. Installation des dépendances
 
 Installez l'ensemble des bibliothèques nécessaires (incluant désormais `scikit-learn` pour les modèles ML) :
 
@@ -125,11 +125,11 @@ pip install -r requirements.txt
 
 ---
 
-## 💻 Guide d'Utilisation
+##  Guide d'utilisation
 
 Le projet s'exécute de manière séquentielle en 3 étapes claires :
 
-### Étape 1 : Lancer le Prétraitement des images d'entraînement
+### Étape 1 : Lancer le prétraitement des images d'entraînement
 
 Placez vos images composites de chiffres (ex: `88888.jpg`) dans `samples/` puis exécutez :
 
@@ -172,7 +172,7 @@ python test.py knn
 
 ---
 
-## ⚙️ Robustesse face à la Sur-Segmentation (Détails Techniques)
+## ⚙️ Robustesse face à la sur-segmentation (détails techniques)
 
 L'une des forces de cette version réside dans sa tolérance aux imperfections de l'écriture manuscrite humaine.
 
@@ -185,7 +185,7 @@ Le projet intègre désormais une fonction algorithmique de **fusion de boîtes 
 
 ---
 
-## 📦 Liste des Dépendances Requises (`requirements.txt`)
+## 📦 Liste des dépendances requises (`requirements.txt`)
 
 Assurez-vous que votre fichier `requirements.txt` contient au minimum les packages suivants :
 
