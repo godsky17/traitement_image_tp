@@ -1,4 +1,4 @@
-# Projet OCR - Reconnaissance automatique de codes postaux manuscrits
+# Projet de reconnaissance automatique de codes postaux manuscrits
 
 > Système complet de traitement d'images et de classification supervisée pour la reconnaissance de chiffres manuscrits isolés ou collés.
 
