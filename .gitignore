@@ -2,3 +2,6 @@ venv
 ./venv
 sorties
 ./sorties
+resultats
+./resultats
+__pycache__
